@@ -38,6 +38,35 @@ let createTimeOutEvent = function(dateStamp){
 
     return this
 }
+let wagesEarnedOnDate = function(dateSought){
+    let rawWage = hoursWorkedOnDate.call(this, dateSought)
+        * this.payPerHour
+    return parseFloat(rawWage.toString())
+}
+
+let allWagesFor = function(){
+    let eligibleDates = this.timeInEvents.map(function(e){
+        return e.date
+    })
+
+    let payable = eligibleDates.reduce(function(memo, d){
+        return memo + wagesEarnedOnDate.call(this, d)
+    }.bind(this), 0)
+
+    return payable
+}
+
+let findEmployeeByFirstName = function(srcArray, firstName) {
+  return srcArray.find(function(rec){
+    return rec.firstName === firstName
+  })
+}
+
+let calculatePayroll = function(arrayOfEmployeeRecords){
+    return arrayOfEmployeeRecords.reduce(function(memo, rec){
+        return memo + allWagesFor.call(rec)
+    }, 0)
+}
 /*
  We're giving you this function. Take a look at it, you might see some usage
  that's new and different. That's because we're avoiding a well-known, but
@@ -47,14 +76,3 @@ let createTimeOutEvent = function(dateStamp){
  for you to use if you need it!
  */
 
-let allWagesFor = function () {
-    let eligibleDates = this.timeInEvents.map(function (e) {
-        return e.date
-    })
-
-    let payable = eligibleDates.reduce(function (memo, d) {
-        return memo + wagesEarnedOnDate.call(this, d)
-    }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
-
-    return payable
-}
